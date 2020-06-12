@@ -2,27 +2,33 @@ package list
 
 import "unsafe"
 
+// 双向节点指针域
 type Head struct {
 	Next *Head
 	Prev *Head
 	len  int
 }
 
+// 初始化表头的函数，指向自己形成一个环
 func (h *Head) Init() {
 	h.Next = h
 	h.Prev = h
 }
 
+// 向头部插入节点
 func (h *Head) Add(new *Head) {
 	h.len++
 	add(new, h, h.Next)
 }
 
+// 向尾部插入节点
 func (h *Head) AddTail(new *Head) {
 	h.len++
 	add(new, h.Prev, h)
 }
 
+// 删除节点
+// API可以直接设计成func (h *Head) Del() 。为了管理链表的len，所以设计成如下形式
 func (h *Head) Del(head *Head) {
 	h.len--
 	del(head.Prev, head.Next)
@@ -30,6 +36,25 @@ func (h *Head) Del(head *Head) {
 
 func (pos *Head) Entry(offset uintptr) unsafe.Pointer {
 	return unsafe.Pointer((uintptr(unsafe.Pointer(pos)) - offset))
+}
+
+// 表头调用FirstEntry可以获取第一个元素
+func (h *Head) FirstEntry(offset uintptr) unsafe.Pointer {
+	return h.NextEntry(offset)
+}
+
+// 表头调LastEntry可以获取最后一元素
+func (h *Head) LastEntry(offset uintptr) unsafe.Pointer {
+	return h.PrevEntry(offset)
+}
+
+// 表头调用获取第一个元素，如果列表为空，返回nil
+func (h *Head) FirstEntryOrNil(offset uintptr) unsafe.Pointer {
+	if h.len == 0 {
+		return nil
+	}
+
+	return h.FirstEntry(offset)
 }
 
 func (pos *Head) NextEntry(offset uintptr) unsafe.Pointer {
