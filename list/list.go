@@ -34,6 +34,7 @@ func (h *Head) Del(head *Head) {
 	del(head.Prev, head.Next)
 }
 
+// 获取当前元素
 func (pos *Head) Entry(offset uintptr) unsafe.Pointer {
 	return unsafe.Pointer((uintptr(unsafe.Pointer(pos)) - offset))
 }
@@ -57,14 +58,17 @@ func (h *Head) FirstEntryOrNil(offset uintptr) unsafe.Pointer {
 	return h.FirstEntry(offset)
 }
 
+// 获取下一个元素
 func (pos *Head) NextEntry(offset uintptr) unsafe.Pointer {
 	return unsafe.Pointer((uintptr(unsafe.Pointer(pos.Next)) - offset))
 }
 
+// 获取上一个元素
 func (pos *Head) PrevEntry(offset uintptr) unsafe.Pointer {
 	return unsafe.Pointer((uintptr(unsafe.Pointer(pos.Prev)) - offset))
 }
 
+// 向后遍历函数，如果遍历过程中有修改则不可以使用
 func (h *Head) ForEach(callback func(pos *Head)) {
 
 	for pos := h.Next; pos != h; pos = pos.Next {
@@ -72,12 +76,14 @@ func (h *Head) ForEach(callback func(pos *Head)) {
 	}
 }
 
+// 向前遍历函数，如果遍历过程中有修改则不可以使用
 func (h *Head) ForEachPrev(callback func(pos *Head)) {
 	for pos := h.Prev; pos != h; pos = pos.Prev {
 		callback(pos)
 	}
 }
 
+// 安全的向后遍历函数，如果遍历过程中有修改可以使用
 func (h *Head) ForEachSafe(callback func(pos *Head)) {
 	for pos, n := h.Next, h.Next; pos != h; {
 		callback(pos)
@@ -86,6 +92,7 @@ func (h *Head) ForEachSafe(callback func(pos *Head)) {
 	}
 }
 
+// 安全的向前遍历函数，如果遍历过程中有修改可以使用
 func (h *Head) ForEachPrevSafe(callback func(pos *Head)) {
 	for pos, n := h.Prev, h.Prev; pos != h; {
 		callback(pos)
@@ -94,6 +101,7 @@ func (h *Head) ForEachPrevSafe(callback func(pos *Head)) {
 	}
 }
 
+// 长度
 func (h *Head) Len() int {
 	return h.len
 }
@@ -111,8 +119,9 @@ func (h *Head) ReplaceInit(new *Head) {
 	h.Init()
 }
 
-func (h *Head) DelInit() {
-	delEntry(h)
+func (h *Head) DelInit(pos *Head) {
+	h.len--
+	delEntry(pos)
 }
 
 func (h *Head) Move(head *Head) {
