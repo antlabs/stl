@@ -23,7 +23,7 @@ func main() {
     n2 := worker{ID: 2}
 
     workerHead.AddTail(&n1.Head) //添加到尾部
-    workerHead.AddTail(&n2.Head) //天骄到尾部
+    workerHead.AddTail(&n2.Head) //添加到尾部
 
     offset := unsafe.Offsetof(workerHead.Head)
     //遍历
