@@ -1,6 +1,8 @@
 package list
 
-import "unsafe"
+import (
+	"unsafe"
+)
 
 // 双向节点指针域
 type Head struct {
@@ -85,7 +87,11 @@ func (h *Head) ForEachPrev(callback func(pos *Head)) {
 
 // 安全的向后遍历函数，如果遍历过程中有修改可以使用
 func (h *Head) ForEachSafe(callback func(pos *Head)) {
-	for pos, n := h.Next, h.Next; pos != h; {
+
+	pos := h.Next
+	n := pos.Next
+
+	for pos != h {
 		callback(pos)
 		pos = n
 		n = pos.Next
@@ -94,7 +100,9 @@ func (h *Head) ForEachSafe(callback func(pos *Head)) {
 
 // 安全的向前遍历函数，如果遍历过程中有修改可以使用
 func (h *Head) ForEachPrevSafe(callback func(pos *Head)) {
-	for pos, n := h.Prev, h.Prev; pos != h; {
+	pos := h.Prev
+	n := pos.Prev
+	for pos != h {
 		callback(pos)
 		pos = n
 		n = pos.Prev
