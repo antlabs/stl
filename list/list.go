@@ -15,6 +15,7 @@ type Head struct {
 func (h *Head) Init() {
 	h.Next = h
 	h.Prev = h
+	h.len = 0
 }
 
 // 向头部插入节点
@@ -120,6 +121,7 @@ func (h *Head) Replace(new *Head) {
 	new.Next.Prev = new
 	new.Prev = old.Prev
 	new.Prev.Next = new
+	new.len = old.len
 }
 
 func (h *Head) ReplaceInit(new *Head) {
@@ -130,6 +132,7 @@ func (h *Head) ReplaceInit(new *Head) {
 func (h *Head) DelInit(pos *Head) {
 	h.len--
 	delEntry(pos)
+	pos.Init()
 }
 
 func (h *Head) Move(head *Head) {

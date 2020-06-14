@@ -224,5 +224,86 @@ func Test_FirstEntryOrNil(t *testing.T) {
 
 }
 
+func Test_Replace(t *testing.T) {
+	old := student{}
+	old.Init()
+	offset := unsafe.Offsetof(old.Head)
+
+	s1 := student{ID: 1}
+	s2 := student{ID: 2}
+	s3 := student{ID: 3}
+	s4 := student{ID: 4}
+	s5 := student{ID: 5}
+
+	old.AddTail(&s1.Head)
+	old.AddTail(&s2.Head)
+	old.AddTail(&s3.Head)
+	old.AddTail(&s4.Head)
+	old.AddTail(&s5.Head)
+
+	assert.Equal(t, old.Len(), 5)
+
+	new := student{}
+	new.Init()
+	old.Replace(&new.Head)
+	assert.Equal(t, new.Len(), 5)
+	assert.Equal(t, old.Len(), 5)
+
+	need := []int{1, 2, 3, 4, 5}
+	i := 0
+	new.ForEach(func(pos *Head) {
+
+		s := (*student)(pos.Entry(offset))
+
+		assert.Equal(t, s.ID, need[i])
+		i++
+	})
+
+	/*
+		i = 0
+		old.ForEach(func(pos *Head) {
+
+			s := (*student)(pos.Entry(offset))
+
+			fmt.Printf("replace:id:%d\n", s.ID)
+			assert.Equal(t, s.ID, need[i])
+			i++
+		})
+	*/
+}
+
 func Test_ReplaceInit(t *testing.T) {
+	old := student{}
+	old.Init()
+	offset := unsafe.Offsetof(old.Head)
+
+	s1 := student{ID: 1}
+	s2 := student{ID: 2}
+	s3 := student{ID: 3}
+	s4 := student{ID: 4}
+	s5 := student{ID: 5}
+
+	old.AddTail(&s1.Head)
+	old.AddTail(&s2.Head)
+	old.AddTail(&s3.Head)
+	old.AddTail(&s4.Head)
+	old.AddTail(&s5.Head)
+
+	assert.Equal(t, old.Len(), 5)
+
+	new := student{}
+	new.Init()
+	old.ReplaceInit(&new.Head)
+	assert.Equal(t, new.Len(), 5)
+	assert.Equal(t, old.Len(), 0)
+
+	need := []int{1, 2, 3, 4, 5}
+	i := 0
+	new.ForEach(func(pos *Head) {
+
+		s := (*student)(pos.Entry(offset))
+
+		assert.Equal(t, s.ID, need[i])
+		i++
+	})
 }
