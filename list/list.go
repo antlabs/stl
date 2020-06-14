@@ -135,14 +135,14 @@ func (h *Head) DelInit(pos *Head) {
 	pos.Init()
 }
 
-func (h *Head) Move(head *Head) {
-	delEntry(h)
-	h.Add(head)
+func (h *Head) Move(list *Head) {
+	delEntry(list)
+	h.Add(list)
 }
 
-func (h *Head) MoveTail(head *Head) {
-	delEntry(h)
-	h.AddTail(head)
+func (h *Head) MoveTail(list *Head) {
+	delEntry(list)
+	h.AddTail(list)
 }
 
 func (h *Head) IsLast() bool {
@@ -158,7 +158,7 @@ func (h *Head) RotateLeft() {
 	var first *Head
 	if !h.Empty() {
 		first = h.Next
-		first.MoveTail(h)
+		h.MoveTail(first)
 	}
 }
 
