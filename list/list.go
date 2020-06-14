@@ -145,12 +145,13 @@ func (h *Head) MoveTail(head *Head) {
 	h.AddTail(head)
 }
 
-func (h *Head) IsLast(head *Head) bool {
+func (h *Head) IsLast() bool {
 	return h.Next == h
 }
 
 func (h *Head) Empty() bool {
-	return h.Next == h
+	//return h.Next == h
+	return h.len == 0
 }
 
 func (h *Head) RotateLeft() {

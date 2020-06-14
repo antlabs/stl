@@ -307,3 +307,36 @@ func Test_ReplaceInit(t *testing.T) {
 		i++
 	})
 }
+
+func Test_DelInit(t *testing.T) {
+	s := student{}
+	s.Init()
+
+	s1 := student{ID: 1}
+	s2 := student{ID: 2}
+
+	s.Add(&s1.Head)
+	s.Add(&s2.Head)
+	assert.Equal(t, s.Len(), 2)
+
+	s.DelInit(&s1.Head)
+
+	assert.True(t, s1.IsLast())
+}
+
+func Test_Move(t *testing.T) {
+}
+
+func Test_MoveTail(t *testing.T) {
+}
+
+func Test_Empty(t *testing.T) {
+	s := student{}
+	s.Init()
+
+	s1 := student{ID: 1}
+	s.Add(&s1.Head)
+	s.Del(&s1.Head)
+
+	assert.True(t, s.Empty())
+}
