@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"testing"
 	"unsafe"
-
-	"github.com/stretchr/testify/assert"
 )
 
 type student struct {
@@ -33,7 +31,10 @@ func Test_ListDel(t *testing.T) {
 		fmt.Printf("%d\n", posEntry.ID)
 	})
 
-	assert.Equal(t, s.Len(), 0)
+	if s.Len() != 0 {
+		t.Error("s.Len() != 0")
+	}
+
 }
 
 func Test_ForEachPrev(t *testing.T) {
@@ -53,7 +54,9 @@ func Test_ForEachPrev(t *testing.T) {
 	s.AddTail(&s4.Head)
 	s.AddTail(&s5.Head)
 
-	assert.Equal(t, s.Len(), 5)
+	if s.Len() != 5 {
+		t.Error("s.Len() != 5")
+	}
 
 	offset := unsafe.Offsetof(s.Head)
 
@@ -63,7 +66,10 @@ func Test_ForEachPrev(t *testing.T) {
 
 		s := (*student)(pos.Entry(offset))
 
-		assert.Equal(t, s.ID, need[i])
+		if s.ID != need[i] {
+			t.Error("s.ID != need[i]\n")
+		}
+
 		i++
 	})
 }
@@ -85,7 +91,9 @@ func Test_ForEachPrevSafe(t *testing.T) {
 	s.AddTail(&s4.Head)
 	s.AddTail(&s5.Head)
 
-	assert.Equal(t, s.Len(), 5)
+	if s.Len() != 5 {
+		t.Error("s.Len() != 5")
+	}
 
 	offset := unsafe.Offsetof(s.Head)
 
@@ -96,11 +104,16 @@ func Test_ForEachPrevSafe(t *testing.T) {
 		posEntry := (*student)(pos.Entry(offset))
 
 		s.Del(pos)
-		assert.Equal(t, posEntry.ID, need[i])
+		if posEntry.ID != need[i] {
+			t.Error("posEntry.ID != need[i]\n")
+		}
+
 		i++
 	})
 
-	assert.Equal(t, s.Len(), 0)
+	if s.Len() != 0 {
+		t.Error("s.Len() != 0\n")
+	}
 }
 
 func Test_ListAddTail(t *testing.T) {
@@ -120,7 +133,9 @@ func Test_ListAddTail(t *testing.T) {
 	s.AddTail(&s4.Head)
 	s.AddTail(&s5.Head)
 
-	assert.Equal(t, s.Len(), 5)
+	if s.Len() != 5 {
+		t.Error("s.Len() != 5")
+	}
 
 	offset := unsafe.Offsetof(s.Head)
 
@@ -130,7 +145,10 @@ func Test_ListAddTail(t *testing.T) {
 
 		s := (*student)(pos.Entry(offset))
 
-		assert.Equal(t, s.ID, need[i])
+		if s.ID != need[i] {
+			t.Error("s.ID != need[i]\n")
+		}
+
 		i++
 	})
 }
@@ -165,7 +183,10 @@ func Test_ListAdd(t *testing.T) {
 
 		//s.Del(pos)
 
-		assert.Equal(t, s.ID, need[i])
+		if s.ID != need[i] {
+			t.Error("s.ID != need[i]\n")
+		}
+
 		fmt.Printf("hello world::%d\n", s.ID)
 		i++
 	})
@@ -185,7 +206,11 @@ func Test_FirstEntry(t *testing.T) {
 	offset := unsafe.Offsetof(s.Head)
 
 	firstStudent := (*student)(s.FirstEntry(offset))
-	assert.Equal(t, firstStudent.ID, 1)
+
+	if firstStudent.ID != 1 {
+		t.Error("firstStudent != 1\n")
+	}
+
 }
 
 func Test_lastEntry(t *testing.T) {
@@ -201,7 +226,10 @@ func Test_lastEntry(t *testing.T) {
 	offset := unsafe.Offsetof(s.Head)
 
 	lastStudent := (*student)(s.LastEntry(offset))
-	assert.Equal(t, lastStudent.ID, 2)
+	if lastStudent.ID != 2 {
+		t.Error("lastStudent != 2\n")
+	}
+
 }
 
 func Test_FirstEntryOrNil(t *testing.T) {
@@ -211,7 +239,9 @@ func Test_FirstEntryOrNil(t *testing.T) {
 
 	offset := unsafe.Offsetof(s.Head)
 	p := s.FirstEntryOrNil(offset)
-	assert.Equal(t, p, unsafe.Pointer(uintptr(0)))
+	if p != nil {
+		t.Error("p != nil\n")
+	}
 
 	// 返回第一个元素
 	s1 := student{ID: 1}
@@ -220,7 +250,9 @@ func Test_FirstEntryOrNil(t *testing.T) {
 	s.AddTail(&s2.Head)
 
 	first := (*student)(s.FirstEntryOrNil(offset))
-	assert.Equal(t, first.ID, 1)
+	if first.ID != 1 {
+		t.Error("first.ID != 1\n")
+	}
 
 }
 
@@ -241,13 +273,20 @@ func Test_Replace(t *testing.T) {
 	old.AddTail(&s4.Head)
 	old.AddTail(&s5.Head)
 
-	assert.Equal(t, old.Len(), 5)
+	if old.Len() != 5 {
+		t.Error("old.Len() != 5\n")
+	}
 
 	new := student{}
 	new.Init()
 	old.Replace(&new.Head)
-	assert.Equal(t, new.Len(), 5)
-	assert.Equal(t, old.Len(), 5)
+	if old.Len() != 5 {
+		t.Error("old.Len() != 5\n")
+	}
+
+	if new.Len() != 5 {
+		t.Error("new.Len() != 5\n")
+	}
 
 	need := []int{1, 2, 3, 4, 5}
 	i := 0
@@ -255,21 +294,13 @@ func Test_Replace(t *testing.T) {
 
 		s := (*student)(pos.Entry(offset))
 
-		assert.Equal(t, s.ID, need[i])
+		if s.ID != need[i] {
+			t.Error("s.ID != need[i]\n")
+		}
+
 		i++
 	})
 
-	/*
-		i = 0
-		old.ForEach(func(pos *Head) {
-
-			s := (*student)(pos.Entry(offset))
-
-			fmt.Printf("replace:id:%d\n", s.ID)
-			assert.Equal(t, s.ID, need[i])
-			i++
-		})
-	*/
 }
 
 func Test_ReplaceInit(t *testing.T) {
@@ -289,13 +320,20 @@ func Test_ReplaceInit(t *testing.T) {
 	old.AddTail(&s4.Head)
 	old.AddTail(&s5.Head)
 
-	assert.Equal(t, old.Len(), 5)
+	if old.Len() != 5 {
+		t.Error("old.Len() != 5\n")
+	}
 
 	new := student{}
 	new.Init()
 	old.ReplaceInit(&new.Head)
-	assert.Equal(t, new.Len(), 5)
-	assert.Equal(t, old.Len(), 0)
+	if old.Len() != 0 {
+		t.Errorf("old.Len():%d != 5\n", old.Len())
+	}
+
+	if new.Len() != 5 {
+		t.Errorf("new.Len():%d != 0\n", new.Len())
+	}
 
 	need := []int{1, 2, 3, 4, 5}
 	i := 0
@@ -303,7 +341,10 @@ func Test_ReplaceInit(t *testing.T) {
 
 		s := (*student)(pos.Entry(offset))
 
-		assert.Equal(t, s.ID, need[i])
+		if s.ID != need[i] {
+			t.Error("s.ID != need[i]\n")
+		}
+
 		i++
 	})
 }
@@ -317,11 +358,16 @@ func Test_DelInit(t *testing.T) {
 
 	s.Add(&s1.Head)
 	s.Add(&s2.Head)
-	assert.Equal(t, s.Len(), 2)
+	if s.Len() != 2 {
+		t.Error("s.Len() != 2\n")
+	}
 
 	s.DelInit(&s1.Head)
 
-	assert.True(t, s1.IsLast())
+	if s1.IsLast() == false {
+		t.Error("s1.IsLast() == false\n")
+	}
+
 }
 
 func Test_Move(t *testing.T) {
@@ -344,7 +390,10 @@ func Test_Move(t *testing.T) {
 	offset := unsafe.Offsetof(s.Head)
 	s.ForEach(func(pos *Head) {
 		posEntry := (*student)(pos.Entry(offset))
-		assert.Equal(t, posEntry.ID, need[i])
+		if posEntry.ID != need[i] {
+			t.Error("posEntry.ID != need[i]\n")
+		}
+
 		//fmt.Printf("%d\n", posEntry.ID)
 		i++
 	})
@@ -370,8 +419,9 @@ func Test_MoveTail(t *testing.T) {
 	i := 0
 	s.ForEach(func(pos *Head) {
 		posEntry := (*student)(pos.Entry(offset))
-		assert.Equal(t, posEntry.ID, need[i])
-		//fmt.Printf("%d\n", posEntry.ID)
+		if posEntry.ID != need[i] {
+			t.Error("posEntry.ID != need[i]\n")
+		}
 		i++
 	})
 }
@@ -396,7 +446,10 @@ func Test_RotateLeft(t *testing.T) {
 	i := 0
 	s.ForEach(func(pos *Head) {
 		posEntry := (*student)(pos.Entry(offset))
-		assert.Equal(t, posEntry.ID, need[i])
+
+		if posEntry.ID != need[i] {
+			t.Error("posEntry.ID != need[i]\n")
+		}
 		//fmt.Printf("%d\n", posEntry.ID)
 		i++
 	})
@@ -410,5 +463,8 @@ func Test_Empty(t *testing.T) {
 	s.Add(&s1.Head)
 	s.Del(&s1.Head)
 
-	assert.True(t, s.Empty())
+	if s.Empty() == false {
+		t.Error("s.Empty() == false\n")
+	}
+
 }
